@@ -1,22 +1,29 @@
-﻿// B=Tree.cpp : Ten plik zawiera funkcję „main”. W nim rozpoczyna się i kończy wykonywanie programu.
-//
-
-#include <iostream>
+﻿
 #include "BTree.h"
+#include <iostream>
+#include <string>
+#include <stdlib.h>
+
 int main()
 {
-    BTree* t = new BTree(1);
+    std::ios_base::sync_with_stdio(0);
+    std::cin.tie(0);
+
+    BTree* tree = new BTree(1);
 
     bool stop = false;
 
     while (!stop)
     {
-        char command;
-        int inputValue;
+        char command = ' ';
+        int inputValue = 0;
         std::cin >> command;
 
         //ignore line
         if (command == '#')continue;
+
+        //stop program
+        if(command == 'X'){ stop = true; break; }
 
         //print command doesnt provide value
         if (command != 'P') 
@@ -32,15 +39,42 @@ int main()
 
         switch (command)
         {
-        case '?': (t->search(inputValue) != NULL) ? std::cout << "+" : std::cout << "-"; break;
-        case 'A': (t->insert(inputValue)); break; 
-        case 'I': (t = new BTree(inputValue)); break;
-        case 'P': (t->print()); break;
-        case 'X': (stop = true); break;
+        case '?': (tree->search(inputValue) != NULL) ? std::cout << inputValue << " +" << std::endl : std::cout << inputValue << " -"<<std::endl; break;
+        case 'A': (tree->insert(inputValue)); break; 
+        case 'I': (tree = new BTree(inputValue)); break;
+        case 'P': (tree->print()); break;
+        case 'L':
+        {
+            //dont work
+            tree = new BTree(inputValue);
+            std::string input;
+            std::string intValue = "";
+
+            std::getline(std::cin, input);
+
+            for (int i = 0; i < input.length(); i++)
+            {
+                
+                //check if int
+                if (input[i] < 48 || input[i]>57)
+                {
+                    if (intValue != "")
+                    {
+                        tree->insert(std::stoi(intValue));
+                        intValue = "";
+                    }
+                    continue;
+                }
+                else
+                {
+                    intValue += input[i];
+                }
+            }
+            break;
+        }      
         default:
             break;
         }
-        std::cout << std::endl;
     } 
 
 }
